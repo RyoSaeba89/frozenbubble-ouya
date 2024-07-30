@@ -1,15 +1,17 @@
 The Android port of the Frozen Bubble game.  Originally developed with SDK
 v20.1.0, using API level 4 (version 1.6 Donut).  Currently developed with:
-<br>Android Studio Arctic Fox 2020.3.1 Patch 2
-<br>Android SDK API level 31 - Android version 12.0 (S)
-<br>Android NDK r23
+<br>Android Studio Koala 2024.1.1 Patch 1
+<br>Android SDK API 35
+<br>Android NDK r27
+<br>Android Gradle Plugin 8.4.2
+<br>Gradle 8.6
 
 <a href="https://f-droid.org/repository/browse/?fdid=org.jfedor.frozenbubble" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"/></a>
 <a href="https://play.google.com/store/apps/details?id=org.jfedor.frozenbubble" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="80"/></a>
 <a href="https://www.amazon.com/Eric-Fortin-Frozen-Bubble/dp/B00F4ITDME" target="_blank">
-<img src="https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-underground-app-us-black.png" alt="Get it on F-Droid" height="80"/></a>
+<img src="https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-underground-app-us-black.png" alt="Get it on Amazon Appstore" height="80"/></a>
 
 The code is based on the Java version of Frozen Bubble created by Glenn Sanson.
 The original Frozen Bubble was created by Guillaume Cottenceau (programming),
