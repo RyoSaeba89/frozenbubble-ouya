@@ -144,7 +144,7 @@ public class LevelManager {
     currentLevel = startingLevel;
     rowOffset = 0;
     levelList = new Vector<byte[][]>();
-    int nextLevel = allLevels.indexOf("\n\n");
+    int nextLevel = allLevels.indexOf("\r\n\r\n");
 
     if (nextLevel == -1 && allLevels.trim().length() != 0) {
       nextLevel = allLevels.length();
@@ -159,7 +159,7 @@ public class LevelManager {
         nextLevel = -1;
       }
       else {
-        nextLevel = allLevels.indexOf("\n\n");
+        nextLevel = allLevels.indexOf("\r\n\r\n");
 
         if (nextLevel == -1) {
           nextLevel = allLevels.length();
