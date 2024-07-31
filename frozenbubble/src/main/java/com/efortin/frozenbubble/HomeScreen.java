@@ -56,6 +56,7 @@ import org.jfedor.frozenbubble.FrozenBubble;
 import org.jfedor.frozenbubble.R;
 import org.jfedor.frozenbubble.SoundManager;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -64,6 +65,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -79,6 +81,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.peculiargames.andmodplug.PlayerThread;
 
@@ -581,11 +586,20 @@ public class HomeScreen extends Activity {
       public void onClick(View v){
         buttonSelPage2 = BTN6_ID;
         mSoundManager.playSound("stick", R.raw.stick);
-        if (BluetoothManager.checkBluetoothOn()) {
-          displayBluetoothDevicesList();
+        if (checkBluetoothRuntimePermissions()) {
+          if (BluetoothManager.checkBluetoothOn()) {
+            displayBluetoothDevicesList();
+          } else {
+            startActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+          }
         }
         else {
-          startActivity(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+          int REQUEST_BLUETOOTH = 1;
+          ActivityCompat.requestPermissions(HomeScreen.this,
+                                            new String[]{Manifest.permission.BLUETOOTH_ADVERTISE,
+                                                         Manifest.permission.BLUETOOTH_CONNECT,
+                                                         Manifest.permission.BLUETOOTH_SCAN},
+                                            REQUEST_BLUETOOTH);
         }
       }
     });
@@ -850,6 +864,23 @@ public class HomeScreen extends Activity {
       finished = true;
       cleanUp();
       finish();
+    }
+  }
+
+  /**
+   * Check if the application has been granted all necessary Bluetooth
+   * runtime permissions in order to initiate a network game.
+   * @return true if all runtime Bluetooth permissions are granted.
+   */
+  private boolean checkBluetoothRuntimePermissions() {
+    if ((ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) == PackageManager.PERMISSION_GRANTED) &&
+        (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) &&
+        (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED))
+    {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 

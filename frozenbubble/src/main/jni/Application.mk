@@ -1,4 +1,5 @@
 #
-# Build for all supported processors.
+# Build for supported processors.
 #
-APP_ABI := all
+APP_ABI := arm64-v8a armeabi-v7a x86 x86_64
+APP_PLATFORM := android-21
