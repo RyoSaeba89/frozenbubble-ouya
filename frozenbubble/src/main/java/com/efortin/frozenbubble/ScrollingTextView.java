@@ -65,7 +65,7 @@ import android.widget.TextView;
  * and the the number of times to scroll the text.
  */
 public class ScrollingTextView extends TextView implements Runnable {
-  private static final float   DEFAULT_SPEED  = 15.0f;
+  private static final float   DEFAULT_SPEED  = 100.0f;
   public  static final boolean SCROLL_DOWN    = true;
   public  static final boolean SCROLL_UP      = false;
   public  static final int     SCROLL_FOREVER = -1;
