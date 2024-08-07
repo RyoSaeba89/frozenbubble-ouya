@@ -45,7 +45,7 @@ LOCAL_MODULE := modplug-1.0
 # ensure Android compatibility.
 #
 LOCAL_SRC_FILES := compat.cpp \
-      fastmix.cpp \
+		fastmix.cpp \
 		load_669.cpp \
 		load_abc.cpp \
 		load_amf.cpp \

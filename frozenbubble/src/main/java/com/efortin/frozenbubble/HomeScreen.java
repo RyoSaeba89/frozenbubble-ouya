@@ -142,7 +142,7 @@ public class HomeScreen extends Activity {
     Button backButton = new Button(this);
     backButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         backKeyPress();
       }
     });
@@ -198,7 +198,7 @@ public class HomeScreen extends Activity {
     optionsButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage4 = BTN12_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Process the button tap and start the preferences activity.
          */
@@ -247,7 +247,7 @@ public class HomeScreen extends Activity {
     continueButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage4 = BTN11_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Process the button tap and load the saved game.
          */
@@ -300,7 +300,7 @@ public class HomeScreen extends Activity {
     aboutButton.setOnClickListener(new Button.OnClickListener(){
         public void onClick(View v){
           buttonSelPage4 = BTN13_ID;
-          mSoundManager.playSound("stick", R.raw.stick);
+          mSoundManager.playSound("stick");
           /*
            * Process the button tap and load the saved game.
            */
@@ -365,7 +365,7 @@ public class HomeScreen extends Activity {
     start2pGameButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage1 = BTN3_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Display the 2 player mode buttons page.
          */
@@ -405,7 +405,7 @@ public class HomeScreen extends Activity {
     start1pGameButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage1 = BTN2_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Process the button tap and start/resume a 1 player game.
          */
@@ -448,7 +448,7 @@ public class HomeScreen extends Activity {
     startArcadeGameButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage1 = BTN1_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Process the button tap and start/resume a 1 player arcade
          * game.
@@ -492,7 +492,7 @@ public class HomeScreen extends Activity {
     gameExtrasButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage1 = BTN4_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Display the game extras buttons page.
          */
@@ -545,7 +545,7 @@ public class HomeScreen extends Activity {
     startWiFiGameButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage2 = BTN7_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Display the player ID buttons page.
          */
@@ -585,7 +585,7 @@ public class HomeScreen extends Activity {
     startBluetoothGameButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage2 = BTN6_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         if (checkBluetoothRuntimePermissions()) {
           if (BluetoothManager.checkBluetoothOn()) {
             displayBluetoothDevicesList();
@@ -637,7 +637,7 @@ public class HomeScreen extends Activity {
     startCPUGameButton.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage2 = BTN5_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Process the button tap and start a 2 player game.
          */
@@ -681,7 +681,7 @@ public class HomeScreen extends Activity {
       public void onClick(View v){
         int numGamepads = numGamepadsConnected();
         buttonSelPage2 = BTN8_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Only start a local 2 player game if at least one gamepad is
          * connected.
@@ -745,7 +745,7 @@ public class HomeScreen extends Activity {
     player2Button.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage3 = BTN10_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Process the button tap and start a 2 player game.
          */
@@ -794,7 +794,7 @@ public class HomeScreen extends Activity {
     player1Button.setOnClickListener(new Button.OnClickListener(){
       public void onClick(View v){
         buttonSelPage3 = BTN9_ID;
-        mSoundManager.playSound("stick", R.raw.stick);
+        mSoundManager.playSound("stick");
         /*
          * Process the button tap and start a 2 player game.
          */

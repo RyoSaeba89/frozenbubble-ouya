@@ -71,7 +71,7 @@ public class SoundManager {
   public SoundManager(Context context) {
     this.context    = context;
     this.containers =
-        Collections.synchronizedList(new ArrayList<SoundPoolContainer>());
+        Collections.synchronizedList(new ArrayList<>());
   }
 
   public final void cleanUp() {
@@ -104,11 +104,11 @@ public class SoundManager {
     }
   }
 
-  public void playSound(String id, int resId) {
+  public void playSound(String id) {
     if (FrozenBubble.getSoundOn()) {
       for (SoundPoolContainer container : containers) {
         if (container.contains(id)) {
-          container.play(id, resId);
+          container.play(id);
           break;
         }
       }
@@ -127,8 +127,8 @@ public class SoundManager {
     }
   }
 
-  private class SoundPoolContainer {
-    private AtomicInteger        size;
+  private static class SoundPoolContainer {
+    private final AtomicInteger  size;
     private Context              context;
     private Map<String, Integer> soundMap;
     private SoundPool            soundPool;
@@ -137,7 +137,7 @@ public class SoundManager {
       this.context   = context;
       this.size      = new AtomicInteger(0);
       this.soundMap  =
-          new ConcurrentHashMap<String, Integer>(MAX_STREAMS_PER_POOL);
+              new ConcurrentHashMap<>(MAX_STREAMS_PER_POOL);
       this.soundPool =
           new SoundPool(MAX_STREAMS_PER_POOL,
                         android.media.AudioManager.STREAM_MUSIC, 0);
@@ -153,7 +153,7 @@ public class SoundManager {
       }
     }
 
-    public void play(String id, int resId) {
+    public void play(String id) {
       android.media.AudioManager audioManager =
           (android.media.AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
       final float streamVolume =

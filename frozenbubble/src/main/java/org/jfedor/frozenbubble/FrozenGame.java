@@ -419,7 +419,7 @@ public class FrozenGame extends GameScreen {
         playResult = gameEnum.LOST;
         endOfGame = true;
         initFrozenify();
-        soundManager.playSound("lose", R.raw.lose);
+        soundManager.playSound("lose");
       }
     }
 
@@ -468,7 +468,7 @@ public class FrozenGame extends GameScreen {
     frozenify = false;
     this.addSprite(new ImageSprite(new Rect(152, 190, 337, 116),
                                    gameLost));
-    soundManager.playSound("noh", R.raw.noh);
+    soundManager.playSound("noh");
   }
 
   private void frozenify() {
@@ -596,7 +596,7 @@ public class FrozenGame extends GameScreen {
     }
 
     if (playSound) {
-      soundManager.playSound("newroot_solo", R.raw.newroot_solo);
+      soundManager.playSound("newroot_solo");
     }
 
     for (int i = 0; i < LevelManager.NUM_COLS; i++) {
@@ -611,7 +611,7 @@ public class FrozenGame extends GameScreen {
             playResult = gameEnum.LOST;
             endOfGame = true;
             initFrozenify();
-            soundManager.playSound("lose", R.raw.lose);
+            soundManager.playSound("lose");
           }
         }
       }
@@ -650,7 +650,7 @@ public class FrozenGame extends GameScreen {
             }
             playResult = gameEnum.WON;
             endOfGame = true;
-            soundManager.playSound("applause", R.raw.applause);
+            soundManager.playSound("applause");
           }
           else if ((malusBar == null) || FrozenBubble.getCompressor()) {
             fixedBubbles++;
@@ -829,7 +829,7 @@ public class FrozenGame extends GameScreen {
 
           launchBubble.changeColor(currentColor);
           penguin.updateState(PenguinSprite.STATE_FIRE);
-          soundManager.playSound("launch", R.raw.launch);
+          soundManager.playSound("launch");
           readyToFire = false;
           hurryTime = 0;
 
@@ -887,7 +887,7 @@ public class FrozenGame extends GameScreen {
       if (hurryTime >= 240) {
         if (hurryTime%40 == 10) {
           addSprite(hurrySprite);
-          soundManager.playSound("hurry", R.raw.hurry);
+          soundManager.playSound("hurry");
         }
         else if (hurryTime%40 == 35) {
           removeSprite(hurrySprite);
@@ -1507,7 +1507,7 @@ public class FrozenGame extends GameScreen {
       else
         nextBubble.changeImage(bubblesBlind[nextColor]);
 
-      soundManager.playSound("whip", R.raw.whip);
+      soundManager.playSound("whip");
     }
   }
 
