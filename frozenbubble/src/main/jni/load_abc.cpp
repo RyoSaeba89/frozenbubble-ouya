@@ -43,6 +43,7 @@ typedef UWORD WORD;
 #include "sndfile.h"
 #endif
 
+#include "compat.h"
 #include "load_pat.h"
 
 #define MAXABCINCLUDES	8
@@ -2406,8 +2407,8 @@ static ABCHANDLE *ABC_Init(void)
 			}
 		}
 		else {
-			srandom((uint32_t)time(0));	// initialize random generator with seed
-			retval->pickrandom = 1+(int)(10000.0*random()/(RAND_MAX+1.0));
+			_srandom((uint32_t)time(0));	// initialize random generator with seed
+			retval->pickrandom = 1+(int)(10000.0*_random()/(RAND_MAX+1.0));
 			// can handle pickin' from songbooks with 10.000 songs
 #ifdef NEWMIKMOD
 			sprintf(buf,"-%ld",retval->pickrandom+1); // next in sequence

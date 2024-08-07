@@ -620,10 +620,6 @@ public class HomeScreen extends Activity {
     startBluetoothGameButton.setId(BTN6_ID);
     startBluetoothGameButton.setFocusable(true);
     startBluetoothGameButton.setFocusableInTouchMode(true);
-    if (BluetoothAdapter.getDefaultAdapter() == null)
-    {
-      startBluetoothGameButton.setEnabled(false);
-    }
     myParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
                                 LayoutParams.WRAP_CONTENT);
     myParams.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -1131,7 +1127,7 @@ public class HomeScreen extends Activity {
 
   @Override
   public void onResume() {
-    super.onPause();
+    super.onResume();
     if (myModPlayer != null) {
       restoreGamePrefs();
       if (myPreferences.musicOn)

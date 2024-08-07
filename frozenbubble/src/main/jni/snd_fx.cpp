@@ -6,6 +6,7 @@
 
 #include "stdafx.h"
 #include <stdlib.h>
+#include "compat.h"
 #include "sndfile.h"
 #include "tables.h"
 
@@ -527,13 +528,13 @@ void CSoundFile::NoteChange(UINT nChn, int note, BOOL bPorta, BOOL bResetEnv)
 					// Volume Swing
 					if (penv->nVolSwing)
 					{
-						int d = ((LONG)penv->nVolSwing*(LONG)((rand() & 0xFF) - 0x7F)) / 128;
+						int d = ((LONG)penv->nVolSwing*(LONG)((_random() & 0xFF) - 0x7F)) / 128;
 						pChn->nVolSwing = (signed short)((d * pChn->nVolume + 1)/128);
 					}
 					// Pan Swing
 					if (penv->nPanSwing)
 					{
-						int d = ((LONG)penv->nPanSwing*(LONG)((rand() & 0xFF) - 0x7F)) / 128;
+						int d = ((LONG)penv->nPanSwing*(LONG)((_random() & 0xFF) - 0x7F)) / 128;
 						pChn->nPanSwing = (signed short)d;
 					}
 				}

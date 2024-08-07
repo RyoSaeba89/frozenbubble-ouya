@@ -33,11 +33,19 @@ LOCAL_LDLIBS := -llog
 LOCAL_MODULE := modplug-1.0
 #
 # These are all the source files that come in the libmodplug archive
-# from sourceforge.net EXCEPT jni_stubs.cpp which has the JNI interface
-# code (basically just small stub functions that go on to call the
-# actual libmodplug methods).
+# from sourceforge.net EXCEPT:
+# 1) jni_stubs.cpp which has the JNI interface code (basically just
+#    small stub functions that go on to call the actual libmodplug
+#    methods).
+# 2) compat.cpp which implements various C standard library functions
+#    due to issues with some versions of Android that do not implement
+#    them, e.g., Android 4.4 (API 19 KitKat).
 #
-LOCAL_SRC_FILES := fastmix.cpp \
+# Thus there are several minor edits to the libmodplug sources to
+# ensure Android compatibility.
+#
+LOCAL_SRC_FILES := compat.cpp \
+      fastmix.cpp \
 		load_669.cpp \
 		load_abc.cpp \
 		load_amf.cpp \
