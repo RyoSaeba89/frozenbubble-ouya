@@ -71,6 +71,7 @@ public class BubbleSprite extends Sprite {
   private int           color;
   private int           fixedAnim;
   private BmpWrap       bubbleFace;
+  private BmpWrap       normalFace;
   private BmpWrap       bubbleBlindFace;
   private BmpWrap       frozenFace;
   private BmpWrap       bubbleBlink;
@@ -114,6 +115,7 @@ public class BubbleSprite extends Sprite {
     this.checkFall = checkFall;
     this.fixedAnim = fixedAnim;
     this.bubbleFace = bubbleFace;
+    this.normalFace = bubbleFace;
     this.bubbleBlindFace = bubbleBlindFace;
     this.frozenFace = frozenFace;
     this.bubbleFixed = bubbleFixed;
@@ -136,6 +138,7 @@ public class BubbleSprite extends Sprite {
 
     this.color = color;
     this.bubbleFace = bubbleFace;
+    this.normalFace = bubbleFace;
     this.bubbleBlindFace = bubbleBlindFace;
     this.frozenFace = frozenFace;
     this.bubbleFixed = bubbleFixed;
@@ -164,6 +167,7 @@ public class BubbleSprite extends Sprite {
 
     this.color = color;
     this.bubbleFace = bubbleFace;
+    this.normalFace = bubbleFace;
     this.bubbleBlindFace = bubbleBlindFace;
     this.frozenFace = frozenFace;
     this.bubbleBlink = bubbleBlink;
@@ -292,6 +296,12 @@ public class BubbleSprite extends Sprite {
     changeSpriteArea(new Rect(getSpritePosition().x-1,
                               getSpritePosition().y-1, 34, 42));
     bubbleFace = frozenFace;
+  }
+
+  public void unfreeze() {
+    changeSpriteArea(new Rect(getSpritePosition().x+1,
+                              getSpritePosition().y+1, 32, 32));
+    bubbleFace = normalFace;
   }
 
   Vector<BubbleSprite> getNeighbors(Point p) {

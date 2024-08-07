@@ -353,6 +353,7 @@ public class FrozenGame extends GameScreen {
           new Rect(columnX[colIdx], 44 - 28 + rowMove, 32, 32),
           color, bubbles[color], bubblesBlind[color], frozenBubbles[color],
           bubbleBlink, bubbleManager, soundManager, this);
+        tempBubble.frozenify();
         scrolling[column] = tempBubble;
         this.addSprite(tempBubble);
         this.spriteToBack(tempBubble);
@@ -1093,16 +1094,21 @@ public class FrozenGame extends GameScreen {
           map.getInt(String.format("%d-%d-lastOpenPosition.y", player, i)));
       int scroll = map.getInt(String.format("%d-%d-scroll", player, i));
       int scrollMax = map.getInt(String.format("%d-%d-scrollMax", player, i));
-      return new BubbleSprite(new Rect(left, top, right, bottom),
-                              color, moveX, moveY, realX, realY,
-                              fixed, blink, released, checkJump, checkFall,
-                              fixedAnim, scroll, scrollMax,
-                              (frozen ? frozenBubbles[color] : bubbles[color]),
-                              lastOpenPosition,
-                              bubblesBlind[color],
-                              frozenBubbles[color],
-                              targetedBubbles, bubbleBlink,
-                              bubbleManager, soundManager, this);
+      BubbleSprite bubbleSprite =
+              new BubbleSprite(new Rect(left, top, right, bottom),
+                               color, moveX, moveY, realX, realY,
+                               fixed, blink, released, checkJump, checkFall,
+                               fixedAnim, scroll, scrollMax,
+                               bubbles[color],
+                               lastOpenPosition,
+                               bubblesBlind[color],
+                               frozenBubbles[color],
+                               targetedBubbles, bubbleBlink,
+                               bubbleManager, soundManager, this);
+      if (frozen) {
+        bubbleSprite.frozenify();
+      }
+      return bubbleSprite;
     }
     else if (type == Sprite.TYPE_IMAGE) {
       int imageId = map.getInt(String.format("%d-%d-imageId", player, i));
@@ -1400,6 +1406,9 @@ public class FrozenGame extends GameScreen {
         }
       }
       for (int column = 0; column < LevelManager.NUM_COLS; column++) {
+        if (scrolling[column] != null){
+          scrolling[column].unfreeze();
+        }
         bubblePlay[column][0] = scrolling[column];
       }
       addScrollRow();
