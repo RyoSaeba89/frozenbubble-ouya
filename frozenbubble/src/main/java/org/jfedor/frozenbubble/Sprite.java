@@ -126,12 +126,19 @@ public abstract class Sprite {
 
   public static void drawImage(BmpWrap image, int x, int y,
                                Canvas c, double scale, int dx, int dy) {
+    if ((image == null) || (image.bmp == null)) {
+      return;
+    }
+
     c.drawBitmap(image.bmp, (float)(x * scale + dx), (float)(y * scale + dy),
                  null);
   }
 
   public static void drawImageClipped(BmpWrap image, int x, int y, Rect clipr,
                                       Canvas c, double scale, int dx, int dy) {
+    if ((image == null) || (image.bmp == null)) {
+      return;
+    }
     //
     //   NOTE 1: Canvas.CLIP_SAVE_FLAG was deprecated in API 26.  Previously the canvas save
     //           appeared as follows: c.save(Canvas.CLIP_SAVE_FLAG);

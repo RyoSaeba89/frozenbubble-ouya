@@ -1016,51 +1016,54 @@ public class FrozenGame extends GameScreen {
      * Simply use the supplied attack bubble buffer to initiate attack
      * bubble launches. 
      */
-    if (isRemote) {
-      for (int i = 0; i < LevelManager.LANES; i++) {
-        if (malusBar.attackBubbles[i] >= 0) {
-          numBubblesLaunched++;
-          int color = malusBar.attackBubbles[i];
-          BubbleSprite malusBubble = new BubbleSprite(
-            new Rect(columnX[i], 44+(LevelManager.MAX_ROWS*28), 32, 32),
-            START_LAUNCH_DIRECTION,
-            color, bubbles[color], bubblesBlind[color],
-            frozenBubbles[color], targetedBubbles, bubbleBlink,
-            bubbleManager, soundManager, this);
-          goingUp.add(malusBubble);
-          this.addSprite(malusBubble);
+    try {
+      if (isRemote) {
+        for (int i = 0; i < LevelManager.LANES; i++) {
+          if (malusBar.attackBubbles[i] >= 0) {
+            numBubblesLaunched++;
+            int color = malusBar.attackBubbles[i];
+            BubbleSprite malusBubble = new BubbleSprite(
+              new Rect(columnX[i], 44 + (LevelManager.MAX_ROWS * 28), 32, 32),
+              START_LAUNCH_DIRECTION,
+              color, bubbles[color], bubblesBlind[color],
+              frozenBubbles[color], targetedBubbles, bubbleBlink,
+              bubbleManager, soundManager, this);
+            goingUp.add(malusBubble);
+            this.addSprite(malusBubble);
+          }
         }
-      }
-      malusBar.removeAttackBubbles(numBubblesLaunched);
-    }
-    else if (malusBar.getAttackBarBubbles() > 0) {
-      boolean[] lanes = new boolean[LevelManager.LANES];
-      int malusBalls = malusBar.removeLine();
-      int pos;
+        malusBar.removeAttackBubbles(numBubblesLaunched);
+      } else if (malusBar.getAttackBarBubbles() > 0) {
+        boolean[] lanes = new boolean[LevelManager.LANES];
+        int malusBalls = malusBar.removeLine();
+        int pos;
 
-      while (malusBalls > 0) {
-        pos = random.nextInt(LevelManager.LANES);
-        if (!lanes[pos]) {
-          lanes[pos] = true;
-          malusBalls--;
+        while (malusBalls > 0) {
+          pos = random.nextInt(LevelManager.LANES);
+          if (!lanes[pos]) {
+            lanes[pos] = true;
+            malusBalls--;
+          }
         }
-      }
 
-      for (int i = 0; i < LevelManager.LANES; i++) {
-        if (lanes[i]) {
-          numBubblesLaunched++;
-          int color = random.nextInt(FrozenBubble.getDifficulty());
-          malusBar.setAttackBubble(i, color);
-          BubbleSprite malusBubble = new BubbleSprite(
-            new Rect(columnX[i], 44+(LevelManager.MAX_ROWS*28), 32, 32),
-            START_LAUNCH_DIRECTION,
-            color, bubbles[color], bubblesBlind[color],
-            frozenBubbles[color], targetedBubbles, bubbleBlink,
-            bubbleManager, soundManager, this);
-          goingUp.add(malusBubble);
-          this.addSprite(malusBubble);
+        for (int i = 0; i < LevelManager.LANES; i++) {
+          if (lanes[i]) {
+            numBubblesLaunched++;
+            int color = random.nextInt(FrozenBubble.getDifficulty());
+            malusBar.setAttackBubble(i, color);
+            BubbleSprite malusBubble = new BubbleSprite(
+              new Rect(columnX[i], 44 + (LevelManager.MAX_ROWS * 28), 32, 32),
+              START_LAUNCH_DIRECTION,
+              color, bubbles[color], bubblesBlind[color],
+              frozenBubbles[color], targetedBubbles, bubbleBlink,
+              bubbleManager, soundManager, this);
+            goingUp.add(malusBubble);
+            this.addSprite(malusBubble);
+          }
         }
       }
+    } catch (IllegalArgumentException iae) {
+      iae.printStackTrace();
     }
 
     return numBubblesLaunched;

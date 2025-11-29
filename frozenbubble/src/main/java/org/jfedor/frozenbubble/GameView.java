@@ -106,6 +106,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import androidx.annotation.NonNull;
+
 import com.efortin.frozenbubble.ComputerAI;
 import com.efortin.frozenbubble.HighscoreDO;
 import com.efortin.frozenbubble.HighscoreManager;
@@ -135,13 +137,14 @@ public class GameView extends SurfaceView
   private gameEnum        game1Status;
   private GameThread      mGameThread;
   private NetworkManager  mNetworkManager;
-  private Object          input1Lock;
-  private Object          input2Lock;
   private PlayerInput     mPlayer1;
   private PlayerInput     mPlayer2;
   private RemoteInterface remoteInterface;
   private VirtualInput    mLocalInput;
   private VirtualInput    mRemoteInput;
+
+  private final Object input1Lock;
+  private final Object input2Lock;
 
   //********************************************************************
   // Listener interface for various events
@@ -153,7 +156,7 @@ public class GameView extends SurfaceView
    *
    */
   public interface GameListener {
-    public abstract void onGameEvent(eventEnum event);
+    void onGameEvent(eventEnum event);
   }
 
   GameListener mGameListener;
@@ -176,7 +179,7 @@ public class GameView extends SurfaceView
      * @author efortin
      *
      */
-    public class NetworkStatus {
+    class NetworkStatus {
       public int     localPlayerId;
       public int     remotePlayerId;
       public boolean isConnected;
@@ -196,7 +199,7 @@ public class GameView extends SurfaceView
         localIpAddress  = null;
         remoteIpAddress = null;
       }
-    };
+    }
 
     /**
      * This class encapsulates player action and game field storage for
@@ -205,7 +208,7 @@ public class GameView extends SurfaceView
      * @author Eric Fortin
      *
      */
-    public class RemoteInterface {
+    class RemoteInterface {
       public boolean       gotAction;
       public boolean       gotFieldData;
       public boolean       gotPrefsData;
@@ -227,37 +230,37 @@ public class GameView extends SurfaceView
         playerAction  = null;
         gameFieldData = null;
       }
-    };
+    }
 
     /*
      * Force the implementer to supply the following methods.
      */
-    public abstract void checkRemoteChecksum();
-    public abstract void cleanUp();
-    public abstract boolean gameIsReadyForAction();
-    public abstract boolean getGameIsFinished();
-    public abstract short getLatestRemoteActionId();
-    public abstract boolean getRemoteAction();
-    public abstract PlayerAction getRemoteActionPreview();
-    public abstract RemoteInterface getRemoteInterface();
-    public abstract void newGame();
-    public abstract void pause();
-    public abstract void sendLocalPlayerAction(int playerId,
-                                               boolean compress,
-                                               boolean launch,
-                                               boolean swap,
-                                               int keyCode,
-                                               int launchColor,
-                                               int nextColor,
-                                               int newNextColor,
-                                               int attackBarBubbles,
-                                               byte attackBubbles[],
-                                               double aimPosition);
-    public abstract void setGameIsFinished();
-    public abstract void setLocalChecksum(short checksum);
-    public abstract void setRemoteChecksum(short checksum);
-    public abstract void unPause();
-    public abstract void updateNetworkStatus(NetworkStatus status);
+    void checkRemoteChecksum();
+    void cleanUp();
+    boolean gameIsReadyForAction();
+    boolean getGameIsFinished();
+    short getLatestRemoteActionId();
+    boolean getRemoteAction();
+    PlayerAction getRemoteActionPreview();
+    RemoteInterface getRemoteInterface();
+    void newGame();
+    void pause();
+    void sendLocalPlayerAction(int playerId,
+                               boolean compress,
+                               boolean launch,
+                               boolean swap,
+                               int keyCode,
+                               int launchColor,
+                               int nextColor,
+                               int newNextColor,
+                               int attackBarBubbles,
+                               byte[] attackBubbles,
+                               double aimPosition);
+    void setGameIsFinished();
+    void setLocalChecksum(short checksum);
+    void setRemoteChecksum(short checksum);
+    void unPause();
+    void updateNetworkStatus(NetworkStatus status);
   }
 
   /**
@@ -371,7 +374,7 @@ public class GameView extends SurfaceView
     /**
      * Based on the provided keypress, check if it corresponds to a new
      * player action.
-     * @param keyCode
+     * @param keyCode the action keypress to check for novelty.
      * @return True if the current keypress indicates a new player action.
      */
     public boolean checkNewActionKeyPress(int keyCode) {
@@ -452,7 +455,7 @@ public class GameView extends SurfaceView
 
     /**
      * Process key presses.
-     * @param keyCode
+     * @param keyCode the key press ID to handle.
      * @return <code>true</code> if the key press was processed,
      * <code>false</code> if not.
      */
@@ -492,7 +495,7 @@ public class GameView extends SurfaceView
 
     /**
      * Process key releases.
-     * @param keyCode
+     * @param keyCode the key press ID to handle.
      * @return True if the key release was processed, false if not.
      */
     public boolean setKeyUp(int keyCode) {
@@ -559,7 +562,7 @@ public class GameView extends SurfaceView
 
     /**
      * Accumulate the change in trackball horizontal position.
-     * @param trackBallDX
+     * @param trackBallDX - the instantaneous trackball delta amount
      */
     public void setTrackBallDx(double trackBallDX) {
       mTrackballDx += trackBallDX;
@@ -644,16 +647,16 @@ public class GameView extends SurfaceView
     private BmpWrap mBanana;
     private BmpWrap mTomato;
 
-    private BubbleFont    mFont;
-    private Drawable      mLauncher;  // drawable because we rotate it
     private FrozenGame    mFrozenGame1;
     private FrozenGame    mFrozenGame2;
     private LevelManager  mLevelManager;
     private MalusBar      malusBar1;
     private MalusBar      malusBar2;
     private SoundManager  mSoundManager;
-    private SurfaceHolder mSurfaceHolder;
 
+    private final BubbleFont    mFont;
+    private final Drawable      mLauncher;  // drawable because we rotate it
+    private final SurfaceHolder mSurfaceHolder;
     private final HighscoreManager mHighScoreManager;
 
     Vector<BmpWrap> mImageList;
@@ -773,7 +776,7 @@ public class GameView extends SurfaceView
       mTomatoOrig = BitmapFactory.decodeResource(
         res, R.drawable.tomato, options);
 
-      mImageList = new Vector<BmpWrap>();
+      mImageList = new Vector<>();
 
       mBubbles = new BmpWrap[8];
       for (int i = 0; i < mBubbles.length; i++) {
@@ -959,7 +962,7 @@ public class GameView extends SurfaceView
       mBananaOrig = null;
       mTomatoOrig = null;
 
-      mImageList = new Vector<BmpWrap>();
+      mImageList = new Vector<>();
 
       mBubbles = new BmpWrap[8];
       for (int i = 0; i < mBubbles.length; i++) {
@@ -1594,7 +1597,7 @@ public class GameView extends SurfaceView
 
       mFont.print("highscore for level " + (level + 1), x, y, canvas,
                   mDisplayScale, mDisplayDX, mDisplayDY);
-      y += 1.5f * ysp;
+      y += (int)(1.5f * (float)ysp);
 
       List<HighscoreDO> hlist = mHighScoreManager.getHighScore(level, 15);
       long lastScoreId = mHighScoreManager.getLastScoreId();
@@ -1607,13 +1610,6 @@ public class GameView extends SurfaceView
           you  = "|";
         }
         // TODO: Add player name support.
-        // mFont.print(you + i++ + " - " + hdo.getName().toLowerCase()
-        // + " - "
-        // + hdo.getShots()
-        // + " - " + (hdo.getTime() / 1000)
-        // + " sec", x + indent,
-        // y, canvas,
-        // mDisplayScale, mDisplayDX, mDisplayDY);
         mFont.print(you + i++ + " - "
           + hdo.getShots()
           + " shots - "
@@ -1691,7 +1687,7 @@ public class GameView extends SurfaceView
       mFont.print("highscore for " +
                   LevelManager.DifficultyStrings[mHighScoreManager.getLevel()],
                   x, y, canvas, mDisplayScale, mDisplayDX, mDisplayDY);
-      y += 1.5f * ysp;
+      y += (int)(1.5f * (float)ysp);
 
       List<HighscoreDO> hlist = mHighScoreManager.getLowScore(level, 15);
       long lastScoreId = mHighScoreManager.getLastScoreId();
@@ -1704,13 +1700,6 @@ public class GameView extends SurfaceView
           you  = "|";
         }
         // TODO: Add player name support.
-        // mFont.print(you + i++ + " - " + hdo.getName().toLowerCase()
-        // + " - "
-        // + hdo.getShots()
-        // + " - " + (hdo.getTime() / 1000)
-        // + " sec", x + indent,
-        // y, canvas,
-        // mDisplayScale, mDisplayDX, mDisplayDY);
         mFont.print(you + i++ + " - "
           + hdo.getShots()
           + " shots - "
@@ -1753,25 +1742,25 @@ public class GameView extends SurfaceView
         if (status.isConnected) {
           mFont.print("wifi status: ]", x, y, canvas,
                       mDisplayScale, mDisplayDX, mDisplayDY);
-          y += ysp;
         }
         else {
           mFont.print("wifi status: _", x, y, canvas,
                       mDisplayScale, mDisplayDX, mDisplayDY);
-          y += ysp;
         }
+
+        y += ysp;
       }
       else if (gameLocale == FrozenBubble.LOCALE_BLUETOOTH) {
         if (status.isConnected) {
           mFont.print("bluetooth status: ]", x, y, canvas,
                       mDisplayScale, mDisplayDX, mDisplayDY);
-          y += ysp;
         }
         else {
           mFont.print("bluetooth status: _", x, y, canvas,
                       mDisplayScale, mDisplayDX, mDisplayDY);
-          y += ysp;
         }
+
+        y += ysp;
       }
 
       mFont.print("my address: " + status.localIpAddress, x, y, canvas,
@@ -1924,8 +1913,8 @@ public class GameView extends SurfaceView
     /**
      * <p>Determine if the input came from the remote player.  The
      * last attached gamepad always belongs to the remote player.
-     * @param msg - the <code>KeyEvent</code> from which to obtain the
-     * input device ID.
+     * @param deviceId - the input device ID to check against the
+     *                 last entry of the input device list.
      * @return <code>true</code> if this input came from the remote
      * player.
      */
@@ -1950,12 +1939,14 @@ public class GameView extends SurfaceView
         int   numGamepads   = 0;
         for (int id : deviceIds) {
           InputDevice device = InputDevice.getDevice(id);
-          if (((device.getSources() & InputDevice.SOURCE_GAMEPAD) ==
+          if (device != null) {
+            if (((device.getSources() & InputDevice.SOURCE_GAMEPAD) ==
               InputDevice.SOURCE_GAMEPAD) ||
               ((device.getSources() & InputDevice.SOURCE_JOYSTICK) ==
-              InputDevice.SOURCE_JOYSTICK)) {
-            lastGamepadId = device.getId();
-            numGamepads++;
+                InputDevice.SOURCE_JOYSTICK)) {
+              lastGamepadId = device.getId();
+              numGamepads++;
+            }
           }
         }
 
@@ -2043,8 +2034,10 @@ public class GameView extends SurfaceView
     }
 
     private void nextLevel() {
-      mLevelManager.goToNextLevel();
-      newGame(false);
+      if (mLevelManager != null) {
+        mLevelManager.goToNextLevel();
+        newGame(false);
+      }
     }
 
     public void pause() {
@@ -2119,7 +2112,7 @@ public class GameView extends SurfaceView
      * Restores game state from the indicated Bundle. Typically called
      * when the Activity is being restored after having been previously
      * destroyed.
-     * @param savedState - Bundle containing the game state.
+     * @param map - Bundle containing the game state.
      */
     public void restoreState(Bundle map) {
       if (map != null) {
@@ -2169,7 +2162,9 @@ public class GameView extends SurfaceView
         long delay = FRAME_DELAY + mLastTime - now;
         if (delay > 0) try {
           sleep(delay);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+          /* this is expected behavior */
+        }
         mLastTime = now;
         Canvas c = null;
         try {
@@ -2515,7 +2510,7 @@ public class GameView extends SurfaceView
 
     /**
      * Obtain the current state of a feature toggle key.
-     * @param keyCode
+     * @param keyCode - the key code identifier.
      * @return The state of the desired feature toggle key flag.
      */
     public boolean toggleKeyState(int keyCode) {
@@ -2841,8 +2836,10 @@ public class GameView extends SurfaceView
    */
   public GameView(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.input1Lock = new Object();
+    this.input2Lock = new Object();
     //Log.i("frozen-bubble", "GameView constructor");
-    init(context, 1, (int) VirtualInput.PLAYER1, FrozenBubble.HUMAN,
+    init(context, 1, VirtualInput.PLAYER1, FrozenBubble.HUMAN,
          FrozenBubble.LOCALE_LOCAL, FrozenBubble.arcadeGame, null, 0);
   }
 
@@ -2854,8 +2851,10 @@ public class GameView extends SurfaceView
    */
   public GameView(Context context, byte[] levels, int startingLevel) {
     super(context);
+    this.input1Lock = new Object();
+    this.input2Lock = new Object();
     //Log.i("frozen-bubble", "GameView constructor");
-    init(context, 1, (int) VirtualInput.PLAYER1, FrozenBubble.HUMAN,
+    init(context, 1, VirtualInput.PLAYER1, FrozenBubble.HUMAN,
          FrozenBubble.LOCALE_LOCAL, FrozenBubble.arcadeGame, levels,
          startingLevel);
   }
@@ -2877,6 +2876,8 @@ public class GameView extends SurfaceView
                   int gameLocale,
                   boolean arcadeGame) {
     super(context);
+    this.input1Lock = new Object();
+    this.input2Lock = new Object();
     //Log.i("frozen-bubble", "GameView constructor");
     init(context, numPlayers, myPlayerId, opponentId, gameLocale, arcadeGame, null, 0);
   }
@@ -2986,12 +2987,6 @@ public class GameView extends SurfaceView
       mLocalInput  = mPlayer2;
       mRemoteInput = mPlayer1;
     }
-
-    /*
-     * Create the player input mutexes.
-     */
-    input1Lock = new Object();
-    input2Lock = new Object();
 
     /*
      * Create a network game manager if this is a network game.
@@ -3173,7 +3168,7 @@ public class GameView extends SurfaceView
       mBlankScreen = false;
       cancel();
     }
-  };
+  }
 
   /**
    * Set the player action for a remote player - as in a person playing
@@ -3188,7 +3183,7 @@ public class GameView extends SurfaceView
 
   /**
    * Set the remote player client game field.
-   * @param newGameField - the object containing the remote field data.
+   * @param newField - the object containing the remote field data.
    */
   private void setPlayerGameField(GameFieldData newField) {
     if (newField == null) {
@@ -3226,18 +3221,18 @@ public class GameView extends SurfaceView
     gameRef.malusBar.setAttackBubbles(newField.attackBarBubbles, null);
   }
 
-  public void surfaceChanged(SurfaceHolder holder, int format, int width,
+  public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width,
                              int height) {
     //Log.i("frozen-bubble", "GameView.surfaceChanged");
     mGameThread.setSurfaceSize(width, height);
   }
 
-  public void surfaceCreated(SurfaceHolder holder) {
+  public void surfaceCreated(@NonNull SurfaceHolder holder) {
     //Log.i("frozen-bubble", "GameView.surfaceCreated()");
     mGameThread.setSurfaceOK(true);
   }
 
-  public void surfaceDestroyed(SurfaceHolder holder) {
+  public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
     //Log.i("frozen-bubble", "GameView.surfaceDestroyed()");
     mGameThread.setSurfaceOK(false);
   }

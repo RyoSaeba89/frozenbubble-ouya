@@ -200,6 +200,10 @@ public class CollisionHelper {
    */
   public static void checkState(int x, int y, int color, BubbleSprite[][] grid,
                                 int[][] outGrid) {
+    if ((grid == null) || (outGrid == null)) {
+      return;
+    }
+
     for (int i = 0; i < LevelManager.NUM_COLS; i++) {
       for (int j = 0; j < LevelManager.NUM_ROWS; j++) {
         outGrid[i][j] = STATE_UNDEFINED;
@@ -216,7 +220,7 @@ public class CollisionHelper {
       for (int i = 0; i < LevelManager.NUM_COLS; i++) {
         for (int j = 0; j < LevelManager.NUM_ROWS; j++) {
           if (outGrid[i][j] == STATE_CHECK_NEXT) {
-            if (isColor(i, j, color, grid, null)) {
+            if (isColor(color, grid[i][j])) {
               outGrid[i][j] = STATE_REMOVE;
               nbRemove++;
               changed = true;
@@ -326,36 +330,12 @@ public class CollisionHelper {
   }
 
   /**
-   * Check if a specific position is of a given color
-   * @param x
-   * @param y
-   * @param color
-   * @param grid
-   * @param alreadyChecked
-   * @return
+   * Check if a specific bubble is of a given color
+   * @param color the color to check
+   * @param bubble bubble to check
+   * @return true if the color matches, false otherwise
    */
-  private static boolean isColor(int x, int y, int color,
-                                 BubbleSprite[][] grid,
-                                 boolean[][] alreadyChecked) {
-    boolean isColor = false;
-    boolean checked = false;
-
-    if (alreadyChecked != null) {
-      checked = alreadyChecked[x][y];
-    }
-
-    if (grid != null) {
-      if (grid[x][y] != null) {
-        if ((grid[x][y].getColor() == color) &&
-            ((alreadyChecked == null) || !checked)) {
-          isColor = true;
-          if (alreadyChecked != null) {
-            alreadyChecked[x][y] = true;
-          }
-        }
-      }
-    }
-
-    return isColor;
+  private static boolean isColor(int color, BubbleSprite bubble) {
+    return (bubble != null) && (bubble.getColor() == color);
   }
 }
