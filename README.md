@@ -1,38 +1,102 @@
-The Android port of the Frozen Bubble game.  Originally developed with SDK
-v20.1.0, using API level 4 (version 1.6 Donut).  Currently developed with:
-<br>Android Studio Koala 2024.1.1 Patch 1
-<br>Android SDK API 35
-<br>Android NDK r27
-<br>Android Gradle Plugin 8.4.2
-<br>Gradle 8.6
+# Frozen Bubble — OUYA port
 
-<a href="https://f-droid.org/repository/browse/?fdid=org.jfedor.frozenbubble" target="_blank">
-<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"/></a>
-<a href="https://play.google.com/store/apps/details?id=org.jfedor.frozenbubble" target="_blank">
-<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="80"/></a>
-<a href="https://www.amazon.com/Eric-Fortin-Frozen-Bubble/dp/B00F4ITDME" target="_blank">
-<img src="https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-underground-app-us-black.png" alt="Get it on Amazon Appstore" height="80"/></a>
+A native port of **Frozen Bubble** to the [OUYA](https://en.wikipedia.org/wiki/Ouya)
+microconsole, with full controller support and the multiplayer modes the
+game is known for.
 
-The code is based on the Java version of Frozen Bubble created by Glenn Sanson.
-The original Frozen Bubble was created by Guillaume Cottenceau (programming),
-Alexis Younes and Amaury Amblard-Ladurantie (artwork) and Matthias Le Bidan
-(soundtrack).
+Frozen Bubble is the classic bubble-popping puzzle game (think *Puzzle
+Bobble* / *Bust-a-Move*): aim, match three or more bubbles of the same
+colour, and clear the board before the bubbles reach the bottom.
 
-The Android port was initially created by Pawel Aleksander Fedorynski, with
-additional development provided by Eric Fortin.
+This port is based on the official Android version of Frozen Bubble by
+**Eric Fortin** and **Pawel Aleksander Fedorynski**
+([videogameboy76/frozenbubbleandroid](https://github.com/videogameboy76/frozenbubbleandroid)),
+itself derived from the original game by Guillaume Cottenceau et al. It is
+**GPL v2/v3** — see [Credits & licence](#credits--licence).
 
-This code is distributed under the GNU General Public License.
+## Features
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License version 2 or 3, as published by the
-Free Software Foundation.
+- **Runs natively on the OUYA** (Android 4.1 / API 16, Tegra 3, armeabi-v7a).
+- **Full OUYA controller support** — menus, gameplay, and the in-game
+  options menu are all reachable without a touchscreen.
+- **Analog-stick aiming** in addition to the D-pad and shoulder buttons.
+- **All the original game modes**: Puzzle, Arcade, and Player vs. CPU.
+- **Multiplayer**:
+  - **2 players on one OUYA** with two controllers (split screen).
+  - **LAN / Wi-Fi** play between two consoles.
+- **MOD chiptune soundtrack** (libmodplug, compiled natively for armv7).
+- Renders full-screen in landscape.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+## Controls
 
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to:
-Free Software Foundation, Inc.
-675 Mass Ave
-Cambridge, MA 02139, USA
+| Action | OUYA controller |
+| --- | --- |
+| Aim | D-pad ◀ ▶ · **left analog stick** · L1 / R1 |
+| Fire bubble | **O** |
+| Swap bubble | **U** · D-pad ▼ |
+| Confirm (menus) | **O** |
+| Cancel / back / exit game | **A** |
+| In-game options menu | **Y** |
+
+The OUYA controller has no Start, Back or Menu key, so those functions are
+mapped onto the face buttons (see [docs/OUYA_PORT.md](docs/OUYA_PORT.md) for
+the rationale).
+
+## Install
+
+Grab `FrozenBubble-OUYA-1.0.apk` from the
+[Releases](../../releases) page and side-load it:
+
+```sh
+adb connect <ouya-ip>:5555
+adb install FrozenBubble-OUYA-1.0.apk
+```
+
+The game registers under the OUYA **Games** menu
+(`tv.ouya.intent.category.GAME`).
+
+## Build from source
+
+Requirements:
+
+- JDK **17** (required by Android Gradle Plugin 8.4.2)
+- Android SDK with platform **34** and build-tools **34.0.0**
+- Android NDK **23.2.8568313** (builds the native libmodplug audio library)
+
+```sh
+# debug build
+JAVA_HOME=/path/to/jdk-17 ./gradlew :frozenbubble:assembleDebug
+
+# signed release build (needs keystore.properties, see below)
+JAVA_HOME=/path/to/jdk-17 ./gradlew :frozenbubble:assembleRelease
+```
+
+To produce a signed release, create a `keystore.properties` file at the
+repository root (kept out of version control):
+
+```properties
+storeFile=deps/frozenbubble-release.jks
+storePassword=********
+keyAlias=********
+keyPassword=********
+```
+
+Without it, `assembleRelease` still builds but produces an unsigned APK.
+
+See **[docs/OUYA_PORT.md](docs/OUYA_PORT.md)** for the full technical
+write-up of what was changed to bring the game to the OUYA.
+
+## Credits & licence
+
+Frozen Bubble is distributed under the **GNU General Public License,
+version 2 or 3**.
+
+- Original game & Perl source — Guillaume Cottenceau
+- Java version — Glenn Sanson
+- Android port — Pawel Aleksander Fedorynski & Eric Fortin
+- Artwork — Alexis Younes, Amaury Amblard-Ladurantie
+- Soundtrack — Matthias Le Bidan
+- OUYA port — this repository
+
+This is an unofficial, fan-made console port and is not affiliated with or
+endorsed by the original authors or OUYA.

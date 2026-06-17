@@ -3074,12 +3074,60 @@ public class GameView extends SurfaceView
     }
   }
 
+  /**
+   * Analog stick deadzone, below which axis motion is ignored so that
+   * stick drift does not continuously rotate the launcher.
+   */
+  private static final float ANALOG_DEADZONE = 0.35f;
+
+  /**
+   * Translate the remaining OUYA controller buttons used during gameplay
+   * into the equivalent D-pad key codes the game engine understands.
+   * <p>The O (fire/confirm) and A (back) buttons are already translated
+   * at the activity level by {@link com.efortin.frozenbubble.OuyaInput};
+   * here we add bubble swapping and shoulder-button aiming.
+   * @param keyCode the received controller key code.
+   * @return the equivalent D-pad key code, or the original key code.
+   */
+  private static int mapGameControllerKeyCode(int keyCode) {
+    switch (keyCode) {
+      case KeyEvent.KEYCODE_BUTTON_X:   // OUYA U -> swap bubble
+        return KeyEvent.KEYCODE_DPAD_DOWN;
+      case KeyEvent.KEYCODE_BUTTON_L1:  // shoulders -> fine aiming
+      case KeyEvent.KEYCODE_BUTTON_L2:
+        return KeyEvent.KEYCODE_DPAD_LEFT;
+      case KeyEvent.KEYCODE_BUTTON_R1:
+      case KeyEvent.KEYCODE_BUTTON_R2:
+        return KeyEvent.KEYCODE_DPAD_RIGHT;
+      default:
+        return keyCode;
+    }
+  }
+
   @Override
   public boolean onGenericMotionEvent(MotionEvent event) {
     boolean handled = false;
     float   x       = event.getAxisValue(MotionEvent.AXIS_HAT_X);
     float   y       = event.getAxisValue(MotionEvent.AXIS_HAT_Y);
     int     keyCode = KeyEvent.KEYCODE_UNKNOWN;
+
+    /*
+     * When the D-pad (hat) is centered, fall back to the left analog
+     * stick for aiming.  A deadzone is applied so that releasing the
+     * stick stops the launcher instead of drifting.
+     */
+    if (x == 0.0f) {
+      float stickX = event.getAxisValue(MotionEvent.AXIS_X);
+      if (Math.abs(stickX) > ANALOG_DEADZONE) {
+        x = stickX;
+      }
+    }
+    if (y == 0.0f) {
+      float stickY = event.getAxisValue(MotionEvent.AXIS_Y);
+      if (Math.abs(stickY) > ANALOG_DEADZONE) {
+        y = stickY;
+      }
+    }
 
     if (event.getAction() == MotionEvent.ACTION_MOVE) {
       if (y != 0.0f) {
@@ -3114,6 +3162,7 @@ public class GameView extends SurfaceView
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     //Log.i("frozen-bubble", "GameView.onKeyDown()");
+    keyCode = mapGameControllerKeyCode(keyCode);
     return mGameThread.doKeyDown(keyCode, event.getDeviceId()) ||
            super.onKeyDown(keyCode, event);
   }

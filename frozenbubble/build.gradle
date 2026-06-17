@@ -1,8 +1,33 @@
 apply plugin: 'com.android.application'
 
+// Load the release signing configuration from keystore.properties if it
+// exists (the file and the keystore itself are kept out of version
+// control).  Unsigned debug builds work without it.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+def hasReleaseSigning = keystorePropertiesFile.exists()
+if (hasReleaseSigning) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace "org.jfedor.frozenbubble"
-    ndkVersion '27.0.12077973'
+    ndkVersion '23.2.8568313'
+
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile     rootProject.file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias      keystoreProperties['keyAlias']
+                keyPassword   keystoreProperties['keyPassword']
+                // The OUYA runs Android 4.1 (API 16), so APK signature
+                // scheme v1 (JAR signing) is required for installation.
+                enableV1Signing true
+                enableV2Signing true
+            }
+        }
+    }
 
     lintOptions {
         disable "Instantiatable"
@@ -10,12 +35,13 @@ android {
 
     defaultConfig {
         applicationId "org.jfedor.frozenbubble"
-        compileSdk 35
-        minSdkVersion 14
-        targetSdkVersion 35
+        compileSdk 34
+        minSdkVersion 16
+        targetSdkVersion 34
 
         ndk {
             moduleName "modplug-1.0"
+            abiFilters "armeabi-v7a"
         }
     }
 
@@ -23,6 +49,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 

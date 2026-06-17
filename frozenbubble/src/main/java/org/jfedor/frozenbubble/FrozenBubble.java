@@ -115,6 +115,7 @@ import com.efortin.frozenbubble.AccelerometerManager;
 import com.efortin.frozenbubble.AccelerometerManager.AccelerometerListener;
 import com.efortin.frozenbubble.HomeScreen;
 import com.efortin.frozenbubble.ModPlayer;
+import com.efortin.frozenbubble.OuyaInput;
 import com.efortin.frozenbubble.Preferences;
 import com.efortin.frozenbubble.PreferencesActivity;
 import com.efortin.frozenbubble.ScrollingCredits;
@@ -263,6 +264,16 @@ public class FrozenBubble extends Activity
     cleanUp();
   }
 
+  /**
+   * Translate OUYA controller buttons (O = fire/confirm, A = back/exit)
+   * into the navigation keys the game engine and dialogs understand,
+   * preserving the device ID so local 2 player input still works.
+   */
+  @Override
+  public boolean dispatchKeyEvent(KeyEvent event) {
+    return super.dispatchKeyEvent(OuyaInput.translate(event));
+  }
+
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     boolean handled = false;
@@ -277,6 +288,14 @@ public class FrozenBubble extends Activity
       else {
         exit(true);
       }
+      handled = true;
+    }
+    else if (keyCode == KeyEvent.KEYCODE_BUTTON_Y) {
+      /*
+       * The OUYA controller has no Menu key, so the "Y" button opens the
+       * in-game options menu (new game, sound options, target mode, ...).
+       */
+      openOptionsMenu();
       handled = true;
     }
     return handled || super.onKeyDown(keyCode, event);

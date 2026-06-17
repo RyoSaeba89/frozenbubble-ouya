@@ -1030,6 +1030,16 @@ public class HomeScreen extends Activity {
     removeViewByID(BTN13_ID);
   }
 
+  /**
+   * Translate OUYA controller buttons (O = confirm, A = back) into the
+   * navigation keys the menu widgets understand before they are
+   * dispatched to the focused button.
+   */
+  @Override
+  public boolean dispatchKeyEvent(KeyEvent event) {
+    return super.dispatchKeyEvent(OuyaInput.translate(event));
+  }
+
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     boolean handled = false;
